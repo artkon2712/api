@@ -33,3 +33,6 @@ export type GetDomainStatusResponse = TypedResponse<{
   isAvailable?: boolean;
   error?: string;
 }>;
+
+export type GetNewDomainsRequest = TypedRequest<Record<string, never>, never>
+

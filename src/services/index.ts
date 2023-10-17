@@ -1,2 +1,2 @@
-export { getDomains } from './ai';
+export { getDomains, loadMoreDomains } from './ai';
 export { isDomainAvailable } from './goDaddy';

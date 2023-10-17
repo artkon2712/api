@@ -1,14 +1,15 @@
 import { NextFunction, Router } from 'express';
 import createHttpError from 'http-errors';
 
-import { getDomains, isDomainAvailable } from '../services';
+import { getDomains, isDomainAvailable, loadMoreDomains } from '../services';
 import type {
   GetDomainStatusRequest,
   GetDomainStatusResponse,
   GetDomainsRequest,
-  GetDomainsResponse,
+  GetDomainsResponse, GetNewDomainsRequest,
 } from './types';
 import AiError from '../services/ai/AiError';
+
 
 const domainRouter = Router();
 
@@ -57,6 +58,25 @@ domainRouter.get(
     const isAvailable = await isDomainAvailable(domain);
 
     res.json({ isAvailable });
+  }
+);
+
+domainRouter.get(
+  '/get_more_domains',
+  async (
+    req: GetNewDomainsRequest,
+    res: GetDomainsResponse,
+    next: NextFunction
+  ) => {
+    let domains;
+    try {
+      domains = await loadMoreDomains();
+    } catch (err) {
+      if (err instanceof AiError) {
+        return next(createHttpError(400, err.message));
+      }
+    }
+    res.json({ domains });
   }
 );
 
